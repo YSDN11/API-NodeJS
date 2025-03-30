@@ -1,0 +1,16 @@
+{
+  "name": "api-nodejs",
+  "version": "1.0.0",
+  "description": "api-nodeJs desenvolvida por Yan Nascimento para fins de estudos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yan Nascimento",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.13.1"
+  }
+}
