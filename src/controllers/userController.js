@@ -1,15 +1,17 @@
 const User = require('../model/user');
+const userService = require('../services/userService');
 
-exports.createUser = (req, res) => {
-    User.create(req.body)
-        .then(user => res.status(201).json(user))
+exports.createUser = async (req, res) => {
+    userService
+        .createUser(req.body)
+        .then((user) => res.status(201).json(user))
         .catch(error => {
             console.error('Erro ao criar o usuário:', error);
             res.status(500).json({ error: "Erro ao criar o usuário" });
         });
 };
 
-exports.getAllUsers = (req, res) => {
+exports.getUsers = (req, res) => {
     User.find()
         .then(users => res.status(201).json(users))
         .catch(error => {
