@@ -4,150 +4,13 @@ info:
   version: 1.0.1
   description: Documentação da API de Usuários e Login
 
-paths:
-  /users/createUser:
-    post:
-      summary: Cria um novo usuário
-      tags: [Usuários]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserInput'
-      responses:
-        '201':
-          description: Usuário criado com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '500':
-          description: Erro ao criar o usuário
-
-  /users/getUsers:
-    get:
-      summary: Lista todos os usuários
-      tags: [Usuários]
-      responses:
-        '200':
-          description: Lista de usuários
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-        '500':
-          description: Erro ao buscar usuários
-
-  /users/getUser/{id}:
-    get:
-      summary: Busca um usuário pelo ID
-      tags: [Usuários]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Usuário encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: Usuário não encontrado
-        '500':
-          description: Erro ao buscar usuário
-
-  /users/updateUser/{id}:
-    put:
-      summary: Atualiza um usuário pelo ID
-      tags: [Usuários]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserInput'
-      responses:
-        '200':
-          description: Usuário atualizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: Usuário não encontrado
-        '500':
-          description: Erro ao atualizar usuário
-
-  /users/deleteUser/{id}:
-    delete:
-      summary: Deleta um usuário pelo ID
-      tags: [Usuários]
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Usuário deletado com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: Usuário não encontrado
-        '500':
-          description: Erro ao deletar usuário
-
-  /api/login:
-    post:
-      summary: Autentica um usuário
-      tags: [Login]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: joao
-                password:
-                  type: string
-                  example: 123456
-      responses:
-        '200':
-          description: Login bem-sucedido
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  user:
-                    $ref: '#/components/schemas/User'
-        '400':
-          description: Nome ou senha não informados
-        '401':
-          description: Credenciais inválidas
-
 components:
+  securitySchemes: # Adiciona o esquema de segurança para o botão "Authorize"
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     User:
       type: object
@@ -183,3 +46,162 @@ components:
         password:
           type: string
           example: 123456
+
+security: # Define o esquema de segurança global (opcional)
+  - BearerAuth: []
+
+paths:
+
+  /api/login:
+    post:
+      summary: Autentica um usuário
+      tags: [Login]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: joao
+                password:
+                  type: string
+                  example: 123456
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Nome ou senha não informados
+        '401':
+          description: Credenciais inválidas
+
+  /users/createUser:
+    post:
+      summary: Cria um novo usuário
+      tags: [Usuários]
+      security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Erro ao criar o usuário
+
+  /users/getUsers:
+    get:
+      summary: Lista todos os usuários
+      tags: [Usuários]
+      security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Erro ao buscar usuários
+
+  /users/getUser/{id}:
+    get:
+      summary: Busca um usuário pelo ID
+      tags: [Usuários]
+      security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuário não encontrado
+        '500':
+          description: Erro ao buscar usuário
+
+  /users/updateUser/{id}:
+    put:
+      summary: Atualiza um usuário pelo ID
+      tags: [Usuários]
+      security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: Usuário atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuário não encontrado
+        '500':
+          description: Erro ao atualizar usuário
+
+  /users/deleteUser/{id}:
+    delete:
+      summary: Deleta um usuário pelo ID
+      tags: [Usuários]
+      security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuário deletado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuário não encontrado
+        '500':
+          description: Erro ao deletar usuário

@@ -1,4 +1,5 @@
 const loginService = require('../services/loginService');
+const jwt = require('jsonwebtoken');
 
 exports.login = async (req, res) => {
     const { name, password } = req.body;
@@ -10,7 +11,8 @@ exports.login = async (req, res) => {
     loginService
         .authenticateUser(name, password)
         .then((user) => {
-            return res.status(200).json({ message: 'Login realizado com sucesso', user });
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            return res.status(200).json({ message: 'Login realizado com sucesso', token, user });
         })
         .catch((err) => {
             console.error('Ocorreu um erro ao autenticar o usuário:', err);
