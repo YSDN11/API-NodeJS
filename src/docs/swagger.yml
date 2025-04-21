@@ -91,7 +91,7 @@ paths:
   /users/createUser:
     post:
       summary: Cria um novo usuário
-      tags: [Usuários]
+      tags: [Users]
       security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
         - BearerAuth: []
       requestBody:
@@ -113,7 +113,7 @@ paths:
   /users/getUsers:
     get:
       summary: Lista todos os usuários
-      tags: [Usuários]
+      tags: [Users]
       security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
         - BearerAuth: []
       responses:
@@ -131,7 +131,7 @@ paths:
   /users/getUser/{id}:
     get:
       summary: Busca um usuário pelo ID
-      tags: [Usuários]
+      tags: [Users]
       security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
         - BearerAuth: []
       parameters:
@@ -155,7 +155,7 @@ paths:
   /users/updateUser/{id}:
     put:
       summary: Atualiza um usuário pelo ID
-      tags: [Usuários]
+      tags: [Users]
       security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
         - BearerAuth: []
       parameters:
@@ -185,7 +185,7 @@ paths:
   /users/deleteUser/{id}:
     delete:
       summary: Deleta um usuário pelo ID
-      tags: [Usuários]
+      tags: [Users]
       security: # Adiciona o ícone de "cadeado" para indicar que a rota é privada
         - BearerAuth: []
       parameters:
@@ -205,3 +205,315 @@ paths:
           description: Usuário não encontrado
         '500':
           description: Erro ao deletar usuário
+  
+  /orders/getOrders:
+    get:
+      summary: Lista todos os pedidos
+      tags: [Orders]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    snack:
+                      type: string
+                    customer:
+                      type: string
+                    status:
+                      type: string
+                    quantity:
+                      type: integer
+        '500':
+          description: Erro ao buscar pedidos
+
+  /orders/getOrderById/{id}:
+    get:
+      summary: Busca um pedido pelo ID
+      tags: [Orders]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pedido encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snack:
+                    type: string
+                  customer:
+                    type: string
+                  status:
+                    type: string
+                  quantity:
+                    type: integer
+        '404':
+          description: Pedido não encontrado
+        '500':
+          description: Erro ao buscar pedido
+
+  /orders/createOrder:
+    post:
+      summary: Cria um novo pedido
+      tags: [Orders]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                snack:
+                  type: string
+                customer:
+                  type: string
+                status:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        '201':
+          description: Pedido criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  order:
+                    type: object
+        '400':
+          description: Erro ao criar o pedido
+
+  /orders/updateOrder/{id}:
+    put:
+      summary: Atualiza um pedido pelo ID
+      tags: [Orders]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                snack:
+                  type: string
+                customer:
+                  type: string
+                status:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        '201':
+          description: Pedido atualizado com sucesso
+        '400':
+          description: Erro ao atualizar o pedido
+
+  /orders/updateOrderStatus/{id}:
+    patch:
+      summary: Atualiza o status de um pedido pelo ID
+      tags: [Orders]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Status do pedido atualizado com sucesso
+        '400':
+          description: Erro ao atualizar o status do pedido
+
+  /orders/deleteOrder/{id}:
+    delete:
+      summary: Deleta um pedido pelo ID
+      tags: [Orders]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pedido deletado com sucesso
+        '400':
+          description: Erro ao deletar o pedido
+
+  /snacks/getSnacks:
+    get:
+      summary: Lista todos os lanches
+      tags: [Snacks]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de lanches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    descriptoion:
+                      type: string
+                    ingredients:
+                      type: string
+                    price:
+                      type: number
+        '500':
+          description: Erro ao buscar lanches
+
+  /snacks/getSnackById/{id}:
+    get:
+      summary: Busca um lanche pelo ID
+      tags: [Snacks]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lanche encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  descriptoion:
+                    type: string
+                  ingredients:
+                    type: string
+                  price:
+                    type: number
+        '404':
+          description: Lanche não encontrado
+
+  /snacks/createSnack:
+    post:
+      summary: Cria um novo lanche
+      tags: [Snacks]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                ingredients:
+                  type: string
+                price:
+                  type: number
+      responses:
+        '201':
+          description: Lanche criado com sucesso
+        '400':
+          description: Erro ao criar o lanche
+
+  /snacks/updateSnack/{id}:
+    put:
+      summary: Atualiza um lanche pelo ID
+      tags: [Snacks]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                ingredients:
+                  type: string
+                price:
+                  type: number
+      responses:
+        '200':
+          description: Lanche atualizado com sucesso
+        '400':
+          description: Erro ao atualizar o lanche
+
+  /snacks/deleteSnack/{id}:
+    delete:
+      summary: Deleta um lanche pelo ID
+      tags: [Snacks]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lanche deletado com sucesso
+        '404':
+          description: Lanche não encontrado
+        '500':
+          description: Erro ao deletar lanche

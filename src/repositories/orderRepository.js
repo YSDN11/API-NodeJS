@@ -1,4 +1,5 @@
 const Order = require ('../models/order');
+const Snack = require('../models/snack');
 
 const updateOrder = async (id, updateFields) => {
     return Order.findByIdAndUpdate(id, updateFields, { new: true })
@@ -67,12 +68,24 @@ const updateOrderStatus = async (id, status) => {
         })
 }
 
-const createOrder = async (orderData) => {
-    Order.create(orderData)
+const createOrder = (orderData) => {
+    return Snack.findById(orderData.snack)
+        .then((snack) => {
+            if (!snack) {
+                throw new Error(`Snack com ID "${orderData.snack}" não encontrado.`);
+            }
+
+            const validStatuses = ['Pending', 'Confirmed', 'Cancelled', 'In progress', 'Delivering', 'Finished'];
+            if (!validStatuses.includes(orderData.status)) {
+                throw new Error(`Status "${orderData.status}" não é válido.`);
+            }
+
+            return Order.create(orderData);
+        })
         .then((order) => order)
-        .catch((err) => {
-            console.error('Erro ao criar pedido: ', err);
-            throw new Error ('Erro ao criar pedido');
+        .catch((error) => {
+            console.error('Erro ao criar pedido:', error);
+            throw new Error('Erro ao criar pedido');
         });
 }
 

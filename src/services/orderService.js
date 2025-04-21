@@ -62,16 +62,16 @@ const updateOrderStatus = (id, status) => {
 };
 
 const createOrder = (orderData) => {
-    const { snack, customer, status, quantity } = orderData;
 
+    const { snack, customer, status, quantity } = orderData;
     if (!snack || !customer || !status || !quantity) {
-        return Promise.reject(new Error('Todos os campos são obrigatórios'));
+        throw new Error('Todos os campos são obrigatórios');
     }
 
-    return orderRepository.createOrder({ snack, customer, status, quantity })
+    return orderRepository.createOrder(orderData)
         .then((order) => order)
-        .catch((err) => {
-            console.error('Erro ao criar pedido:', err);
+        .catch((error) => {
+            console.error('Erro ao criar pedido:', error);
             throw new Error('Erro ao criar pedido');
         });
 };

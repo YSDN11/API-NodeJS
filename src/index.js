@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors'); // Added CORS import
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/docs/swagger.yml');
@@ -17,6 +18,13 @@ const port = 3000;
 
 connectDB();
 
+const corsOptions = {
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/', userRoutes, homeRoutes, loginRoutes, orderRoutes, snackRoutes);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
