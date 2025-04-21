@@ -9,6 +9,8 @@ const connectDB = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
 const homeRoutes = require('./routes/homeRoutes');
 const loginRoutes = require('./routes/loginRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const snackRoutes = require('./routes/snackRoutes');
 
 const app = express();
 const port = 3000;
@@ -16,7 +18,7 @@ const port = 3000;
 connectDB();
 
 app.use(express.json());
-app.use('/', userRoutes, homeRoutes, loginRoutes);
+app.use('/', userRoutes, homeRoutes, loginRoutes, orderRoutes, snackRoutes);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, () => {
